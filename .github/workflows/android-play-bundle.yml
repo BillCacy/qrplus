@@ -1,0 +1,29 @@
+name: Build Android Play Bundle
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-play-bundle-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build production Android App Bundle
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.13.0
+
+      - name: Build with EAS
+        run: npx --yes eas-cli@24.8.0 build --platform android --profile production --non-interactive --wait
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}

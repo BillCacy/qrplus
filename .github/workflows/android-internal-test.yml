@@ -1,0 +1,39 @@
+name: Build Android Internal Test APK
+
+on:
+  workflow_dispatch:
+    inputs:
+      profile:
+        description: Build profile (preview is standalone; development uses Metro)
+        required: true
+        type: choice
+        default: preview
+        options:
+          - preview
+          - development
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-internal-${{ inputs.profile }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build ${{ inputs.profile }} APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.13.0
+
+      - name: Build with EAS
+        run: npx --yes eas-cli@24.8.0 build --platform android --profile "$EAS_PROFILE" --non-interactive --wait
+        env:
+          EAS_PROFILE: ${{ inputs.profile }}
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
