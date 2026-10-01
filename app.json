@@ -2,6 +2,7 @@
   "expo": {
     "name": "QR Plus",
     "slug": "qr-plus",
+    "owner": "wcacys-team",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -28,16 +29,25 @@
     },
     "android": {
       "package": "com.coreaxiom.qrplus",
+      "versionCode": 1,
       "adaptiveIcon": {
         "backgroundColor": "#F4F3EC",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.CAMERA"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "c9352122-d1f1-42f7-9d1a-8fb15bd443a6"
+      }
     }
   }
 }
