@@ -25,6 +25,7 @@
       "expo-document-picker"
     ],
     "ios": {
+      "bundleIdentifier": "com.coreaxiom.qrplus",
       "supportsTablet": true
     },
     "android": {
@@ -37,9 +38,7 @@
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "permissions": [
-        "android.permission.CAMERA"
-      ]
+      "permissions": ["android.permission.CAMERA"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
