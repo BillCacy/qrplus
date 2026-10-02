@@ -74,20 +74,25 @@ flowchart TD
 
   subgraph CI[Source and automation]
     REPO[GitHub repository]
-    ACTION[Manual GitHub Actions workflow]
+    ACTION[Manual GitHub Actions workflows]
     TOKEN[EXPO_TOKEN repository secret]
+    RUNNER[Ubuntu runner with Node and Android tools]
+    ARTIFACTS[GitHub Actions artifacts]
     REPO --> ACTION
-    TOKEN --> ACTION
+    ACTION --> RUNNER
+    RUNNER --> ARTIFACTS
   end
 
   subgraph EAS[Expo Application Services]
-    BUILD[EAS Build with remote Android keystore]
+    EASCLI[EAS CLI local build]
+    PROJECT[Expo project and remote Android keystore]
+    EASCLI --> PROJECT
+  end
+
+  subgraph OUTPUTS[Build outputs]
     DEVAPK[Development APK with expo-dev-client]
     PREVIEWAPK[Standalone preview APK]
     AAB[Production Android App Bundle]
-    BUILD --> DEVAPK
-    BUILD --> PREVIEWAPK
-    BUILD --> AAB
   end
 
   subgraph TESTING[Devices and Play testing]
@@ -96,8 +101,16 @@ flowchart TD
     PLAY[Google Play internal or closed track]
   end
 
-  ACTION --> BUILD
-  SOURCE --> BUILD
+  SOURCE --> RUNNER
+  TOKEN --> EASCLI
+  RUNNER --> EASCLI
+  EASCLI --> DEVAPK
+  EASCLI --> PREVIEWAPK
+  EASCLI --> AAB
+  DEVAPK --> ARTIFACTS
+  PREVIEWAPK --> ARTIFACTS
+  AAB --> ARTIFACTS
+  ARTIFACTS --> PHONES
   DEVAPK --> PHONES
   METRO <--> PHONES
   PREVIEWAPK --> PHONES
@@ -105,12 +118,14 @@ flowchart TD
   PLAY --> PHONES
 ```
 
-- **Development:** Install the development APK on devices and run Metro on the
-  developer workstation. The app connects to Metro for live JavaScript updates.
-- **Standalone testing:** Build the preview APK and share its EAS install link;
-  testers do not need Metro or the Play Store.
-- **Play testing:** Build the production AAB and upload it to a Play internal or
-  closed testing track. Google Play distributes it to opted-in testers.
+- **Development:** Download the development APK from the GitHub Actions run,
+  install it on devices, and run Metro on the developer workstation for live
+  JavaScript updates.
+- **Standalone testing:** Download the preview APK from the Actions artifact and
+  sideload it; testers do not need Metro or the Play Store.
+- **Play testing:** Download the production AAB artifact and upload it to a Play
+  internal or closed testing track. Google Play distributes it to opted-in
+  testers.
 
 ## App identity
 
